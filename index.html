@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#073b5c">
+  <meta name="description" content="Portal Sistem Manajemen Barang Milik Negara Balai POM di Ende. Akses layanan administrator dan pengguna.">
+  <title>Portal BMN | Balai POM di Ende</title>
+  <style>
+    :root {
+      --navy: #073b5c;
+      --navy-deep: #052b45;
+      --blue: #087eaa;
+      --teal: #16a6a0;
+      --gold: #e6b85c;
+      --ink: #183447;
+      --muted: #627887;
+      --paper: #f4f8fa;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(22,166,160,.12), transparent 28rem),
+        radial-gradient(circle at 88% 82%, rgba(230,184,92,.14), transparent 25rem),
+        var(--paper);
+      display: flex;
+      flex-direction: column;
+    }
+    .topline { height: 7px; background: linear-gradient(90deg, var(--teal), var(--gold), var(--blue)); }
+    header {
+      width: min(1120px, calc(100% - 44px));
+      margin: 0 auto;
+      padding: 28px 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .identity-mark {
+      width: 54px; height: 54px; flex: 0 0 54px;
+      display: grid; place-items: center;
+      border-radius: 16px;
+      color: white;
+      background: linear-gradient(145deg, var(--navy), var(--blue));
+      box-shadow: 0 8px 20px rgba(7,59,92,.18);
+      font-size: 15px; font-weight: 800; letter-spacing: .7px;
+      border: 1px solid rgba(255,255,255,.5);
+    }
+    .brand-name { font-size: 14px; font-weight: 800; letter-spacing: .11em; color: var(--navy); }
+    .brand-sub { margin-top: 4px; color: var(--muted); font-size: 12px; letter-spacing: .04em; }
+    main {
+      width: min(1120px, calc(100% - 44px));
+      margin: auto;
+      padding: 28px 0 58px;
+      flex: 1;
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      padding: clamp(34px, 6vw, 68px);
+      color: white;
+      background: linear-gradient(118deg, var(--navy-deep) 0%, #07577a 62%, #087e88 100%);
+      box-shadow: 0 24px 60px rgba(5,43,69,.18);
+      isolation: isolate;
+    }
+    .hero:before {
+      content: "";
+      position: absolute; inset: 0 0 0 auto; width: 48%; z-index: -1;
+      opacity: .17;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M0 25 25 0 50 25 75 0 100 25M0 75 25 50 50 75 75 50 100 75M25 0v100M75 0v100M0 25h100M0 75h100'/%3E%3Cpath d='M25 25 50 50 75 25 100 50 75 75 50 50 25 75 0 50'/%3E%3C/g%3E%3C/svg%3E");
+      mask-image: linear-gradient(90deg, transparent, black 35%);
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 8px 13px; border: 1px solid rgba(255,255,255,.25);
+      border-radius: 999px; background: rgba(255,255,255,.09);
+      color: #e5f6f7; font-size: 11px; font-weight: 700; letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .eyebrow:before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 4px rgba(230,184,92,.15); }
+    h1 { max-width: 690px; margin: 22px 0 14px; font-size: clamp(34px, 5.2vw, 58px); line-height: 1.08; letter-spacing: -.035em; }
+    .hero p { max-width: 630px; margin: 0; color: rgba(240,249,252,.82); font-size: clamp(14px, 1.7vw, 17px); line-height: 1.8; }
+    .hero-accent { width: 74px; height: 4px; margin-top: 27px; border-radius: 4px; background: var(--gold); }
+    .section-heading { margin: 38px 0 17px; display: flex; align-items: end; justify-content: space-between; gap: 12px; }
+    .section-heading h2 { margin: 0; color: var(--navy); font-size: 20px; letter-spacing: -.02em; }
+    .section-heading span { color: var(--muted); font-size: 12px; }
+    .choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .choice {
+      min-height: 220px; position: relative; overflow: hidden;
+      display: flex; flex-direction: column; align-items: flex-start;
+      padding: 27px; border-radius: 22px; text-decoration: none; color: inherit;
+      background: white; border: 1px solid #e2ebef;
+      box-shadow: 0 10px 28px rgba(13,57,78,.055);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .choice:hover { transform: translateY(-4px); border-color: rgba(8,126,170,.35); box-shadow: 0 18px 36px rgba(13,57,78,.11); }
+    .choice:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+    .choice-icon {
+      width: 48px; height: 48px; display: grid; place-items: center;
+      border-radius: 15px; color: var(--blue); background: #eaf5f8;
+    }
+    .choice.user .choice-icon { color: #078c82; background: #e8f7f3; }
+    .choice-icon svg { width: 24px; height: 24px; }
+    .choice h3 { margin: 20px 0 7px; color: var(--navy); font-size: 20px; }
+    .choice p { max-width: 390px; margin: 0 0 22px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .open-link { margin-top: auto; display: inline-flex; align-items: center; gap: 9px; color: var(--blue); font-size: 13px; font-weight: 800; }
+    .user .open-link { color: #078c82; }
+    .arrow { font-size: 19px; transition: transform .2s ease; }
+    .choice:hover .arrow { transform: translateX(4px); }
+    .note {
+      margin-top: 20px; padding: 15px 18px; border-radius: 14px;
+      display: flex; align-items: flex-start; gap: 11px;
+      color: #536d7a; background: rgba(255,255,255,.72); border: 1px solid #e4edf0;
+      font-size: 12px; line-height: 1.65;
+    }
+    .note svg { flex: 0 0 17px; margin-top: 1px; color: var(--teal); }
+    footer {
+      width: min(1120px, calc(100% - 44px)); margin: 0 auto;
+      padding: 20px 0 25px; border-top: 1px solid #e1eaee;
+      display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      color: #718591; font-size: 11px;
+    }
+    footer strong { color: var(--navy); font-weight: 700; }
+    @media (max-width: 650px) {
+      header, main, footer { width: min(100% - 30px, 1120px); }
+      header { padding-top: 20px; }
+      main { padding-top: 18px; }
+      .hero { border-radius: 22px; padding: 34px 25px; }
+      .hero:before { width: 75%; }
+      .choices { grid-template-columns: 1fr; }
+      .choice { min-height: 205px; }
+      .section-heading { align-items: flex-start; flex-direction: column; }
+      footer { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *:before, *:after { transition: none !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <div class="topline"></div>
+  <header>
+    <div class="identity-mark" aria-hidden="true">BMN</div>
+    <div>
+      <div class="brand-name">BALAI POM DI ENDE</div>
+      <div class="brand-sub">Sistem Manajemen Barang Milik Negara</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="main-title">
+      <div class="eyebrow">Portal Layanan BMN</div>
+      <h1 id="main-title">Selamat Datang di Portal BMN</h1>
+      <p>Portal layanan Sistem Manajemen Barang Milik Negara Balai POM di Ende. Silakan pilih akses sesuai kebutuhan Anda untuk melanjutkan.</p>
+      <div class="hero-accent"></div>
+    </section>
+
+    <div class="section-heading">
+      <h2>Pilih Jenis Akses</h2>
+      <span>Akses layanan secara mudah dan terarah</span>
+    </div>
+
+    <section class="choices" aria-label="Pilihan akses portal">
+      <a class="choice admin" href="https://script.google.com/macros/s/AKfycbwBZRfaKyfYMrDvNC1pWSO-DG7qqKl4P14mof7VkZ9_eM7uYlRZ3uad3CXVZM0QddP_/exec" target="_blank" rel="noopener noreferrer">
+        <div class="choice-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="m19.4 15 .1.1a1.7 1.7 0 0 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.7 1.7 0 0 1-3.4 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1a1.7 1.7 0 0 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9H4a1.7 1.7 0 0 1 0-3.4h.2a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a1.7 1.7 0 0 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a1.7 1.7 0 0 1 3.4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a1.7 1.7 0 0 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.7 1.7 0 0 1 0 3.4h-.2a1.7 1.7 0 0 0-1.2 2.9Z"/></svg>
+        </div>
+        <h3>Admin</h3>
+        <p>Akses khusus administrator untuk mengelola data BMN, permohonan peminjaman, pengembalian, serta laporan.</p>
+        <span class="open-link">Masuk ke halaman Admin <span class="arrow">→</span></span>
+      </a>
+
+      <a class="choice user" href="https://script.google.com/macros/s/AKfycbwBZRfaKyfYMrDvNC1pWSO-DG7qqKl4P14mof7VkZ9_eM7uYlRZ3uad3CXVZM0QddP_/exec?page=peminjaman" target="_blank" rel="noopener noreferrer">
+        <div class="choice-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 8v6m-3-3h6"/></svg>
+        </div>
+        <h3>Pengguna</h3>
+        <p>Akses layanan bagi pegawai atau pemohon untuk mengajukan permohonan peminjaman Barang Milik Negara.</p>
+        <span class="open-link">Ajukan Peminjaman <span class="arrow">→</span></span>
+      </a>
+    </section>
+
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+      <span>Gunakan menu <strong>Admin</strong> jika Anda memiliki kewenangan administrator. Untuk mengajukan peminjaman BMN, pilih menu <strong>Pengguna</strong>.</span>
+    </div>
+  </main>
+
+  <footer>
+    <span><strong>Balai POM di Ende</strong> · Sistem Manajemen Barang Milik Negara</span>
+    <span>Portal Layanan BMN</span>
+  </footer>
+</body>
+</html>
