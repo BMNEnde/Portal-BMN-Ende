@@ -93,8 +93,7 @@ h1 span{color:#8be0a6}
       <h1 id="hero-title">Kelola Aset,<br><span>Lebih Mudah.</span></h1>
       <p class="hero-description">Selamat datang di Portal Sistem Manajemen Barang Milik Negara Balai POM di Ende. Satu pintu layanan untuk pengelolaan aset dan pengajuan peminjaman BMN yang tertib, transparan, dan mudah diakses.</p>
       <div class="hero-actions">
-        <a class="primary-link" href="#akses">Jelajahi Layanan <span aria-hidden="true">↓</span></a>
-        <a class="secondary-link" href="pengguna.html">Ajukan Peminjaman <span aria-hidden="true">↗</span></a>
+        <button class="primary-link" id="exploreButton" type="button" aria-controls="akses" aria-expanded="false">Jelajahi Layanan <span aria-hidden="true">↓</span></button>
       </div>
     </div>
     <div class="hero-visual" aria-label="Identitas pengelolaan BMN Balai POM di Ende">
@@ -132,5 +131,7 @@ h1 span{color:#8be0a6}
   <span><strong>Balai POM di Ende</strong> · Sistem Manajemen Barang Milik Negara</span>
   <span>Portal Layanan BMN</span>
 </footer>
-<script>\ndocument.getElementById("exploreButton").addEventListener("click",function(){const section=document.getElementById("akses");const opened=section.classList.toggle("is-open");this.setAttribute("aria-expanded",String(opened));this.querySelector("span").textContent=opened?"↑":"↓";if(opened){section.scrollIntoView({behavior:"smooth",block:"start"});}});\n</script>\n</body>
+<script>
+document.getElementById("exploreButton").addEventListener("click",function(){const section=document.getElementById("akses");const opened=section.classList.toggle("is-open");this.setAttribute("aria-expanded",String(opened));this.querySelector("span").textContent=opened?"↑":"↓";if(opened){section.scrollIntoView({behavior:"smooth",block:"start"});}});
+</script>\n</body>
 </html>
