@@ -51,19 +51,15 @@ h1 span{color:#8be0a6}
 .section-intro h2{margin:7px 0 0;color:var(--navy);font-size:clamp(22px,3vw,29px);letter-spacing:-.03em}
 .section-intro p{margin:0;color:var(--muted);font-size:12px}
 #akses{display:none}#akses.is-open{display:block;animation:reveal .35s ease both}@keyframes reveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}\n.access-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
-.access-card{position:relative;overflow:hidden;min-height:225px;padding:27px 29px 25px;border:1px solid var(--line);border-radius:22px;background:#fff;text-decoration:none;box-shadow:0 10px 28px rgba(16,45,73,.055);transition:transform .22s,box-shadow .22s,border-color .22s}
-.access-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(var(--blue),var(--navy))}
-.access-card.user:before{background:linear-gradient(var(--green),#8bcf75)}
-.access-card:after{content:"";position:absolute;width:190px;height:190px;right:-100px;top:-115px;border:25px solid #edf4fa;border-radius:50%;pointer-events:none}
-.access-card.user:after{border-color:#eef8f1}
-.access-card:hover{transform:translateY(-5px);border-color:#b9d0e1;box-shadow:0 20px 42px rgba(16,45,73,.11)}
-.card-icon{width:53px;height:53px;display:grid;place-items:center;border-radius:16px;background:#edf5fb;color:var(--blue)}
-.user .card-icon{background:#eff9f2;color:var(--green)}
-.card-icon svg{width:25px;height:25px}
-.access-card h3{margin:17px 0 7px;color:var(--navy);font-size:21px}
-.access-card p{max-width:480px;margin:0;color:var(--muted);font-size:13px;line-height:1.75}
-.card-cta{display:inline-flex;align-items:center;gap:10px;margin-top:20px;color:var(--blue);font-size:12px;font-weight:900}
-.user .card-cta{color:var(--green)}
+.access-card{min-height:220px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;padding:27px;border:1px solid #e2ebef;border-radius:22px;background:#fff;text-decoration:none;color:inherit;box-shadow:0 10px 28px rgba(13,57,78,.055);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.access-card:hover{transform:translateY(-4px);border-color:rgba(8,126,170,.35);box-shadow:0 18px 36px rgba(13,57,78,.11)}
+.card-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:#eaf5f8;color:var(--blue)}
+.user .card-icon{background:#e8f7f3;color:#078c82}
+.card-icon svg{width:24px;height:24px}
+.access-card h3{margin:20px 0 7px;color:var(--navy);font-size:20px}
+.access-card p{max-width:390px;margin:0 0 22px;color:var(--muted);font-size:13px;line-height:1.7}
+.card-cta{display:inline-flex;align-items:center;gap:9px;margin-top:auto;color:var(--blue);font-size:13px;font-weight:800}
+.user .card-cta{color:#078c82}
 .card-cta span{font-size:19px;transition:transform .2s}
 .access-card:hover .card-cta span{transform:translateX(5px)}
 .info-strip{display:flex;align-items:flex-start;gap:13px;margin-top:20px;padding:17px 19px;border:1px solid #dce8e4;border-radius:16px;background:#f8fcf9;color:#526c80;font-size:12px;line-height:1.75}
