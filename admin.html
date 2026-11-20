@@ -1415,7 +1415,7 @@ input,select,textarea,.filter-bar input,.filter-bar select{border-radius:10px!im
 
 
   <script>
-/* Jembatan API BMN: halaman GitHub berkomunikasi dengan backend Apps Script melalui POST tersembunyi. */
+/* Jembatan API BMN untuk frontend GitHub Pages. */
 (function () {
   "use strict";
   const API_URL = "https://script.google.com/macros/s/AKfycbwBZRfaKyfYMrDvNC1pWSO-DG7qqKl4P14mof7VkZ9_eM7uYlRZ3uad3CXVZM0QddP_/exec";
@@ -1432,9 +1432,12 @@ input,select,textarea,.filter-bar input,.filter-bar select{border-radius:10px!im
 
   window.addEventListener("message", function (event) {
     const message = event.data;
-    if (!message || message.__bmnApiResponse !== true || !pending[message.id]) return;
+    if (!message || message.__bmnApiResponse !== true || typeof message.id !== "string") return;
     const item = pending[message.id];
-    if (!item.frame || event.source !== item.frame.contentWindow) return;
+    if (!item) return;
+    // Apps Script dapat membungkus HtmlOutput dalam iframe googleusercontent.
+    // Karena itu event.source tidak selalu sama dengan iframe luar yang kita buat.
+    // ID acak per permintaan dipakai untuk mencocokkan respons.
     bersihkan(message.id);
     if (message.ok) {
       if (typeof item.success === "function") item.success(message.result);
