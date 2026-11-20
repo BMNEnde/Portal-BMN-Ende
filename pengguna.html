@@ -192,50 +192,56 @@
 (function () {
   "use strict";
   const API_URL = "https://script.google.com/macros/s/AKfycbwBZRfaKyfYMrDvNC1pWSO-DG7qqKl4P14mof7VkZ9_eM7uYlRZ3uad3CXVZM0QddP_/exec";
-  const FRAME_NAME = "bmn_api_transport_frame";
-  let frame = document.querySelector('iframe[name="' + FRAME_NAME + '"]');
-  if (!frame) {
-    frame = document.createElement("iframe");
-    frame.name = FRAME_NAME;
-    frame.setAttribute("aria-hidden", "true");
-    frame.style.cssText = "position:absolute;width:0;height:0;border:0;left:-9999px;top:-9999px";
-    document.body.appendChild(frame);
-  }
   const pending = Object.create(null);
   let sequence = 0;
 
+  function bersihkan(id) {
+    const item = pending[id];
+    if (!item) return;
+    clearTimeout(item.timer);
+    if (item.frame && item.frame.parentNode) item.frame.parentNode.removeChild(item.frame);
+    delete pending[id];
+  }
+
   window.addEventListener("message", function (event) {
-    if (event.source !== frame.contentWindow) return;
     const message = event.data;
     if (!message || message.__bmnApiResponse !== true || !pending[message.id]) return;
-    const callback = pending[message.id];
-    delete pending[message.id];
-    clearTimeout(callback.timer);
+    const item = pending[message.id];
+    if (!item.frame || event.source !== item.frame.contentWindow) return;
+    bersihkan(message.id);
     if (message.ok) {
-      if (typeof callback.success === "function") callback.success(message.result);
+      if (typeof item.success === "function") item.success(message.result);
     } else {
       const error = new Error(message.error || "Permintaan ke server BMN gagal.");
-      if (typeof callback.failure === "function") callback.failure(error);
+      if (typeof item.failure === "function") item.failure(error);
       else console.error(error);
     }
   });
 
   function send(method, args, success, failure) {
     const id = "bmn_" + Date.now() + "_" + (++sequence) + "_" + Math.random().toString(36).slice(2);
+    const frame = document.createElement("iframe");
+    frame.name = "bmn_api_frame_" + id;
+    frame.setAttribute("aria-hidden", "true");
+    frame.style.cssText = "position:absolute;width:0;height:0;border:0;left:-9999px;top:-9999px";
     pending[id] = {
       success: success,
       failure: failure,
+      frame: frame,
       timer: setTimeout(function () {
-        if (!pending[id]) return;
-        delete pending[id];
+        const item = pending[id];
+        if (!item) return;
+        bersihkan(id);
         const error = new Error("Server belum memberikan jawaban. Periksa koneksi dan pengaturan akses Web App Apps Script.");
-        if (typeof failure === "function") failure(error);
+        if (typeof item.failure === "function") item.failure(error);
       }, 45000)
     };
+    document.body.appendChild(frame);
+
     const form = document.createElement("form");
     form.method = "POST";
     form.action = API_URL;
-    form.target = FRAME_NAME;
+    form.target = frame.name;
     form.acceptCharset = "UTF-8";
     form.style.display = "none";
     const input = document.createElement("textarea");
@@ -250,15 +256,9 @@
   function makeRunner(success, failure) {
     return new Proxy({}, {
       get: function (_target, property) {
-        if (property === "withSuccessHandler") {
-          return function (callback) { return makeRunner(callback, failure); };
-        }
-        if (property === "withFailureHandler") {
-          return function (callback) { return makeRunner(success, callback); };
-        }
-        if (property === "withUserObject") {
-          return function () { return makeRunner(success, failure); };
-        }
+        if (property === "withSuccessHandler") return function (callback) { return makeRunner(callback, failure); };
+        if (property === "withFailureHandler") return function (callback) { return makeRunner(success, callback); };
+        if (property === "withUserObject") return function () { return makeRunner(success, failure); };
         if (typeof property !== "string" || property === "then") return undefined;
         return function () { send(property, Array.prototype.slice.call(arguments), success, failure); };
       }
