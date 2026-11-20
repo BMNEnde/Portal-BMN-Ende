@@ -188,7 +188,7 @@
   </main>
 <div id="popupLayer" class="popup-backdrop" style="display:none" role="dialog" aria-modal="true"><div class="popup"><div class="popup-top"><div class="popup-icon" id="popupIcon">?</div><div><h2 id="popupTitle">Konfirmasi</h2><p id="popupText"></p></div></div><div class="popup-actions"><button type="button" class="secondary" id="popupCancel">Batal</button><button type="button" class="primary" id="popupOk">Lanjutkan</button></div></div></div>
 <script>
-/* Jembatan API BMN: halaman GitHub berkomunikasi dengan backend Apps Script melalui POST tersembunyi. */
+/* Jembatan API BMN untuk frontend GitHub Pages. */
 (function () {
   "use strict";
   const API_URL = "https://script.google.com/macros/s/AKfycbwBZRfaKyfYMrDvNC1pWSO-DG7qqKl4P14mof7VkZ9_eM7uYlRZ3uad3CXVZM0QddP_/exec";
@@ -205,9 +205,12 @@
 
   window.addEventListener("message", function (event) {
     const message = event.data;
-    if (!message || message.__bmnApiResponse !== true || !pending[message.id]) return;
+    if (!message || message.__bmnApiResponse !== true || typeof message.id !== "string") return;
     const item = pending[message.id];
-    if (!item.frame || event.source !== item.frame.contentWindow) return;
+    if (!item) return;
+    // Apps Script dapat membungkus HtmlOutput dalam iframe googleusercontent.
+    // Karena itu event.source tidak selalu sama dengan iframe luar yang kita buat.
+    // ID acak per permintaan dipakai untuk mencocokkan respons.
     bersihkan(message.id);
     if (message.ok) {
       if (typeof item.success === "function") item.success(message.result);
